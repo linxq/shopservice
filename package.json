@@ -1,0 +1,36 @@
+{
+  "name": "",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/client.js",
+  "scripts": {
+    "service": "yarn ts-node src/client.ts",
+    "compress": "yarn ts-node src/compress.ts",
+    "createBg": "yarn ts-node src/createBg.ts",
+    "combin": "yarn ts-node src/combin.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^12.12.26",
+    "nyc": "^15.0.0",
+    "source-map-support": "^0.5.16",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "@alicloud/imageseg20191230": "2.0.5",
+    "@alicloud/openapi-client": "^0.4.4",
+    "@alicloud/tea-console": "^1.0.0",
+    "@alicloud/tea-typescript": "^1.7.1",
+    "@alicloud/tea-util": "^1.4.7",
+    "glob": "^10.3.10",
+    "gm": "^1.25.0"
+  },
+  "files": [
+    "dist",
+    "src"
+  ]
+}
+
+
