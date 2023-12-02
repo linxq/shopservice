@@ -8,7 +8,13 @@
     "compress": "yarn ts-node src/compress.ts",
     "createBg": "yarn ts-node src/createBg.ts",
     "combin": "yarn ts-node src/combin.ts",
-    "downProduction": "yarn ts-node src/downProduction/getData.ts"
+    "getData": "yarn ts-node src/downProduction/getData.ts",
+    "getDataFree": "yarn ts-node src/downProduction/getDataFree.ts",
+    "batchProductionNo": "yarn ts-node src/downProduction/batchProductionNo.ts",
+    "createProject": "yarn ts-node src/downProduction/createProductionFile.ts",
+    "genExcel":"yarn ts-node src/downProduction/genExcel.ts",
+    "genPro": "npm run createProject && npm run genExcel"
+
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +25,7 @@
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
   },
+  "type": "commonjs",
   "dependencies": {
     "@alicloud/imageseg20191230": "2.0.5",
     "@alicloud/openapi-client": "^0.4.4",
@@ -26,9 +33,14 @@
     "@alicloud/tea-typescript": "^1.7.1",
     "@alicloud/tea-util": "^1.4.7",
     "axios": "^1.6.2",
+    "gb2312-hex": "^1.1.0",
     "glob": "^10.3.10",
     "gm": "^1.25.0",
-    "node-fetch": "^3.3.2"
+    "iconv-gbk": "^0.1.0",
+    "node-fetch": "^3.3.2",
+    "node-xlsx": "^0.23.0",
+    "p-limit": "^5.0.0",
+    "pkg-dir": "^8.0.0"
   },
   "files": [
     "dist",

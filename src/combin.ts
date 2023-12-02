@@ -80,7 +80,7 @@ function rmEmptyDir(path, level = 0) {
     level !== 0 && fs.rmdirSync(path);
   }
 }
-function clearDir(path) {
+export function clearDir(path) {
   emptyDir(path);
   rmEmptyDir(path);
 }

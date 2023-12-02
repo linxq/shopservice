@@ -1,2 +1,5 @@
 node_modules
 .vscode
+data
+skus.json
+spus.json

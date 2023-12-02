@@ -1,20 +1,21 @@
+import pLimit from "p-limit";
 import { writeFile, writeFileSync } from "fs";
 
 import { getFilterCode } from "./excel";
 let skus = [];
 const authCookie =
-  "cookieFinger=1701418507661; AlteonPmall=0a03b7f71c69d5b51f41; st=5dc50e74f751b3efb68a5ceedfc3625a";
-const authToken = "5dc50e74f751b3efb68a5ceedfc3625a";
-const shopInfoId = "202109233677";
+  "cookieFinger=1701418507661; AlteonPmall=0a03b7f68ff916751f41; st=a66e966a525c491a8b896c6ad98e1ffe";
+const authToken = "a66e966a525c491a8b896c6ad98e1ffe";
+const shopInfoId = "202209092501";
 async function getListPage(pageNum, resultArr, totalConunt?) {
   if (totalConunt && resultArr.length >= totalConunt) {
     return resultArr;
   }
   const result = await fetch(
-    `https://mall.95306.cn/proxy/item-service/shop/shopItem/queryShopItemListOnlyItemInfo?platformId=20&accountId=2&pageNum=${pageNum}&pageSize=10&shopItemInfoVo=%7B%22itemId%22%3Anull%2C%22shopId%22%3A%22${shopInfoId}%22%7D`,
+    `https://mall.95306.cn/proxy/elasticsearch-service/mall/search/queryItemListByKeywordNew?platformId=20&pageNum=${pageNum}&shopInfoId=${shopInfoId}&materialType=0`,
     {
       headers: {
-        accept: "application/json;charset=UTF-8",
+        accept: "application/json, text/javascript, */*; q=0.01",
         "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
         authorization: authToken,
         "sec-ch-ua":
@@ -26,7 +27,7 @@ async function getListPage(pageNum, resultArr, totalConunt?) {
         "sec-fetch-site": "same-origin",
         "x-requested-with": "XMLHttpRequest",
         cookie: authCookie,
-        Referer: "https://mall.95306.cn/shop-view/",
+        Referer: "https://mall.95306.cn",
         "Referrer-Policy": "no-referrer-when-downgrade",
       },
       body: null,
@@ -34,17 +35,17 @@ async function getListPage(pageNum, resultArr, totalConunt?) {
     }
   );
   const json = await result.json();
-  const total = json.data.totalCount;
+  const total = json.data.itemList.count;
 
-  resultArr = resultArr.concat(json.data.result);
+  resultArr = resultArr.concat(json.data.itemList.resultList);
 
   return await getListPage(pageNum + 1, resultArr, total);
 }
 
-function getSkuFetch(itemId) {
+function getSkuFetch(skuId) {
   return new Promise(function (resolve, reject) {
     fetch(
-      `https://mall.95306.cn/proxy/item/mall/search/queryNormalItemDetails?platformId=20&itemId=${itemId}&areaId=-1`,
+      `https://mall.95306.cn/proxy/item/mall/search/queryNormalItemDetails?platformId=20&itemId=${skuId}&areaId=-1`,
       {
         headers: {
           accept: "application/json, text/javascript, */*; q=0.01",
@@ -59,7 +60,7 @@ function getSkuFetch(itemId) {
           "sec-fetch-site": "same-origin",
           "x-requested-with": "XMLHttpRequest",
           cookie: authCookie,
-          Referer: "https://mall.95306.cn/",
+          Referer: "https://mall.95306.cn",
           "Referrer-Policy": "no-referrer-when-downgrade",
         },
         body: null,
@@ -85,12 +86,15 @@ function getSkuList(resultArr: Array<any>) {
 async function run() {
   try {
     let resultArr = await getListPage(1, []);
-
     let index = 0;
     for (let current of resultArr) {
-      //测试使用
-      //   if (index > 2) break;
-      const value: any = await getSkuFetch(current.id);
+      /**
+       * 测试限制次数 使用
+       */
+      // if (index > 2) break;
+
+      current.id = current.itemId;
+      const value: any = await getSkuFetch(current.itemId);
       const data = value.data;
       current.describeUrl = data.itemPublishVo.describeUrl;
       const itemSkuInfoList = data.itemSkuInfoList;
@@ -100,6 +104,7 @@ async function run() {
         curSku.sellPrice = data.sellPrice;
         curSku.pictureUrl = data.pictureUrl;
       }
+
       current.skus = itemSkuInfoList;
       skus = skus.concat(itemSkuInfoList);
       index++;
@@ -147,6 +152,5 @@ async function getSkuPic(skuId) {
     }
   );
   const json = await result.json();
-  console.log("🚀 ~ file: getData.ts:146 ~ getSkuPic ~ json:", json);
   return json.data[0];
 }
