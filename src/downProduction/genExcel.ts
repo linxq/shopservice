@@ -4,6 +4,8 @@ import path from "path";
 
 const skus = require("../../skus.json");
 
+const spus = require("../../spus.json");
+
 const title = [
   "序号",
   "spuid",
@@ -16,11 +18,15 @@ const title = [
   "京东价格",
   "原价格",
   "型号",
+  "状态",
 ];
 
 function genData() {
   const result = skus.map((curr, index) => {
     const arr = curr?.packageDis?.split("*") || [0, 0, 0];
+    const oneSpu = spus.find((item) => {
+      return curr.itemId === item.id;
+    });
     return [
       index + 1,
       String(curr.itemId),
@@ -31,9 +37,10 @@ function genData() {
       arr[1],
       arr[2],
 
-      String(curr.sellPrice * 1.2),
+      String(curr.sellPrice * 1.4),
       String(curr.sellPrice),
       curr.modelCode,
+      oneSpu?.saleStatusView,
     ];
   });
   return result;

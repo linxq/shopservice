@@ -4,9 +4,9 @@ import { writeFile, writeFileSync } from "fs";
 import { getFilterCode } from "./excel";
 let skus = [];
 const authCookie =
-  "cookieFinger=1701418507661; AlteonPmall=0a03b7f68ff916751f41; st=a66e966a525c491a8b896c6ad98e1ffe";
-const authToken = "a66e966a525c491a8b896c6ad98e1ffe";
-const shopInfoId = "202209092501";
+  "cookieFinger=1701826284242; AlteonPmall=0a03b7f2351c29131f41; st=44c69573e3be4714fe67a7401e8534ec";
+const authToken = "44c69573e3be4714fe67a7401e8534ec";
+const shopInfoId = "202304236832";
 async function getListPage(pageNum, resultArr, totalConunt?) {
   if (totalConunt && resultArr.length >= totalConunt) {
     return resultArr;
