@@ -3,11 +3,11 @@ import { writeFile, writeFileSync } from "fs";
 import { getFilterCode } from "./excel";
 let skus = [];
 const authCookie =
-  "AlteonPmall=0a03b7f4344672131f41; st=2c4716c64bba5b742d42c7a80ee0e1ff; cookieFinger=1701914776257";
-const authToken = "2c4716c64bba5b742d42c7a80ee0e1ff";
-const shopInfoId = "202205117906";
+  "AlteonPmall=0a03b7f7cff33c181f41; st=a1a0f102887671ead4f0806a1b284b61";
+const authToken = "a1a0f102887671ead4f0806a1b284b61";
+const shopInfoId = "202011241075";
 async function getListPage(pageNum, resultArr, totalConunt?) {
-  if (totalConunt && resultArr.length >= 20) {
+  if (totalConunt && resultArr.length >= totalConunt) {
     return resultArr;
   }
   const result = await fetch(

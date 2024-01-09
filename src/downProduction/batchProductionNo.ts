@@ -4,12 +4,19 @@ import { encodeToGb2312HexList } from "gb2312-hex";
 import { encodeGBK, decodeGBK } from "iconv-gbk";
 import { getFilterCode } from "./excel";
 
-const authCookie = `Hm_lvt_b56fc9930e6006a67bbf2c85dd2bde0d=1701263385; Hm_lpvt_b56fc9930e6006a67bbf2c85dd2bde0d=1701263388; accessToken=eyJhbGciOiJSUzI1NiIsImtpZCI6IjZFMjRDQ0I0MjRGREEzQ0NCMjk2MkFDMTM3Q0REMEJERTQ2MzVDODZSUzI1NiIsInR5cCI6ImF0K2p3dCIsIng1dCI6ImJpVE10Q1Q5bzh5eWxpckJOODNRdmVSalhJWSJ9.eyJuYmYiOjE3MDEyNjMzNzMsImV4cCI6MTcwMTI3MDU3MywiaXNzIjoiaHR0cHM6Ly9wYXNzcG9ydC5nZHMub3JnLmNuIiwiY2xpZW50X2lkIjoidnVlanNfY29kZV9jbGllbnQiLCJzdWIiOiIyMTQ0MzY4IiwiYXV0aF90aW1lIjoxNzAxMjYzMzA1LCJpZHAiOiJsb2NhbCIsInJvbGUiOiJTeXN0ZW1NZW1iZXJDYXJkVXNlciIsIlVzZXJJbmZvIjoie1wiVXNlck5hbWVcIjpcIjIyMTM5NjhcIixcIkJyYW5kT3duZXJJZFwiOjEyMzUyNjQsXCJCcmFuZE93bmVyTmFtZVwiOlwi5rC45bq35biC5Lq_5Lym56eR5oqA5pyJ6ZmQ5YWs5Y-4XCIsXCJHY3BDb2RlXCI6W1wiNjk3NzAwMzMzXCJdLFwiVXNlckNhcmROb1wiOlwiMjIxMzk2OFwiLFwiSXNQYWlkXCI6ZmFsc2UsXCJDb21wYW55TmFtZUVOXCI6XCJcIixcIkNvbXBhbnlBZGRyZXNzQ05cIjpcIua1meaxn-ecgemHkeWNjuW4guawuOW6t-W4gue7j-a1juW8gOWPkeWMuumHkeWxseS4nOi3rzHlj7fnrKzkuInluaLnrKwxNC0xNuWPt1wiLFwiQ29udGFjdFwiOlwi5b6Q6I2j5LyfXCIsXCJDb250YWN0VGVsTm9cIjpcIjEzNTg4NjE2NTc3XCIsXCJHY3BMaWNlbnNlSG9sZGVyVHlwZVwiOlwiQzM3MTRcIixcIkxlZ2FsUmVwcmVzZW50YXRpdmVcIjpcIuW-kOiNo-S8n1wiLFwiVW5pZmllZFNvY2lhbENyZWRpdENvZGVcIjpcIjkxMzMwNzg0TUEyRENHTDEzQlwifSIsIlY0VXNlckluZm8iOiJ7XCJVc2VyTmFtZVwiOlwiMjIxMzk2OFwiLFwiRW1haWxcIjpcIjg0MTczOTYyNEBxcS5jb21cIixcIlBob25lXCI6bnVsbCxcIkNhcmROb1wiOlwiMjIxMzk2OFwifSIsImp0aSI6Ijg4NjJERDc3ODcwMTFBRDRDRkUyOUNEOUU1QjU5MjI5Iiwic2lkIjoiNDIzMTcwRjk3RDFEREY5OUJDQzRBRjdGMThENTUyMzgiLCJpYXQiOjE3MDEyNjMzNzMsInNjb3BlIjpbIm9wZW5pZCIsInByb2ZpbGUiLCJhcGkxIiwib2ZmbGluZV9hY2Nlc3MiXSwiYW1yIjpbInB3ZCJdfQ.FkUG7lQcgHJu4ltsKNL1Dy9Gnny5ZxJjYgHW2odCB8RNYjPVZiMd3EbuJ4ZAjFAmCETRWghchBwgfJ3WxkWtQqD4wBm5Ml8zZex0PPw_-K1MjlI8U0pCfIAc-lWWmOcDpDJUzyi9f8q2wSqAGEGS1q52YNs1vjQG9NMAFJOWpsoHEKO5haH0MGP_ZYGCu-v8nkOAVLsvqlJ1Jsp9AGRJN6XXqD7XPDmKQxhPEuGuH36ynbY2tH07zK1-xyV3jzmxqvJeBrSMF5BSU-JgYttsx3HJHyOu8-lgzdkG-XA_0SIVtKyzJCvwzmQceGoB0ATzASwkD8yqnzFQ0r99YZpAhA; ASP.NET_SessionId=ouicz45udkwtznrxivub2nyd; userInfo=${encode(
-  '{"UserName":"2213968","BrandOwnerId":1235264,"BrandOwnerName":"永康市亿伦科技有限公司","GcpCode":["697700333"],"UserCardNo":"2213968","IsPaid":false,"CompanyNameEN":"","CompanyAddressCN":"浙江省金华市永康市经济开发区金山东路1号第三幢第14-16号","Contact":"徐荣伟","ContactTelNo":"13588616577","GcpLicenseHolderType":"C3714","LegalRepresentative":"徐荣伟","UnifiedSocialCreditCode":"91330784MA2DCGL13B"}'
+import xlsx from "node-xlsx";
+import fs from "fs";
+import path from "path";
+
+const title = ["序号", "spuId", "skuId", "名称", "code"];
+
+const authCookie = `"Hm_lvt_b56fc9930e6006a67bbf2c85dd2bde0d=1700554715,1700644493,1700740389; ASP.NET_SessionId=ect30mu55azstfiyqv2ei24y; webfxtab_tppane=0; Hm_lpvt_b56fc9930e6006a67bbf2c85dd2bde0d=1702453471; accessToken=eyJhbGciOiJSUzI1NiIsImtpZCI6IjZFMjRDQ0I0MjRGREEzQ0NCMjk2MkFDMTM3Q0REMEJERTQ2MzVDODZSUzI1NiIsInR5cCI6ImF0K2p3dCIsIng1dCI6ImJpVE10Q1Q5bzh5eWxpckJOODNRdmVSalhJWSJ9.eyJuYmYiOjE3MDI0NTM0NTUsImV4cCI6MTcwMjQ2MDY1NSwiaXNzIjoiaHR0cHM6Ly9wYXNzcG9ydC5nZHMub3JnLmNuIiwiY2xpZW50X2lkIjoidnVlanNfY29kZV9jbGllbnQiLCJzdWIiOiIyMTQ4NjcwIiwiYXV0aF90aW1lIjoxNzAyNDUzNDQ5LCJpZHAiOiJsb2NhbCIsInJvbGUiOiJTeXN0ZW1NZW1iZXJDYXJkVXNlciIsIlVzZXJJbmZvIjoie1wiVXNlck5hbWVcIjpcIjIxNzQ0NDBcIixcIkJyYW5kT3duZXJJZFwiOjEyMzgyNTksXCJCcmFuZE93bmVyTmFtZVwiOlwi5rKz5YyX6ZSQ6K-a57q_57yG5pyJ6ZmQ5YWs5Y-4XCIsXCJHY3BDb2RlXCI6W1wiNjk3NzAzMzQyXCJdLFwiVXNlckNhcmROb1wiOlwiMjE3NDQ0MFwiLFwiSXNQYWlkXCI6ZmFsc2UsXCJDb21wYW55TmFtZUVOXCI6XCJcIixcIkNvbXBhbnlBZGRyZXNzQ05cIjpcIuays-WMl-ecgemCouWPsOW4guWugeaZi-WOv-i0vuWutuWPo-mVh-ilv-WAmemrmOadkeadkeWMl1wiLFwiQ29udGFjdFwiOlwi6YOt5LiW5qyjXCIsXCJDb250YWN0VGVsTm9cIjpcIjE1OTMwMTcyODk3XCIsXCJHY3BMaWNlbnNlSG9sZGVyVHlwZVwiOlwiQzM5MzFcIixcIkxlZ2FsUmVwcmVzZW50YXRpdmVcIjpcIuiCluW9puaCslwiLFwiVW5pZmllZFNvY2lhbENyZWRpdENvZGVcIjpcIjkxMTMwNTI4TUEwRzlMUkU0RVwifSIsIlY0VXNlckluZm8iOiJ7XCJVc2VyTmFtZVwiOlwiMjE3NDQ0MFwiLFwiRW1haWxcIjpcIjQ2NTY1MzY1QHFxLmNvbVwiLFwiUGhvbmVcIjpudWxsLFwiQ2FyZE5vXCI6XCIyMTc0NDQwXCJ9IiwianRpIjoiQjYyNTM3N0Q3MzM3NTI2NzIxRUU4NEQyQTgzNzlCNEIiLCJzaWQiOiIxOTVCN0M4QjNENkVDQTQ1OTUxMUREQTJERkMyQjNBMyIsImlhdCI6MTcwMjQ1MzQ1NSwic2NvcGUiOlsib3BlbmlkIiwicHJvZmlsZSIsImFwaTEiLCJvZmZsaW5lX2FjY2VzcyJdLCJhbXIiOlsicHdkIl19.FmXaKjhQ0EmSOiQfp4XlC5Wg7fc8kT07zbcEWvsvPBiDs6lNpgeE6-39yAZPChyjuW7rwoviTikBFZbR1a19MIck3Jqutc3Efek3FM4IoJdTmbTtffjZ-21ssoL9CGEtTxmzWcnZ5aQ-WS0ELjGWCJFQNq-Mmr3kAbkUl7EOyiFyA1vI35D0nV2ayTiUqXOORfbFB66whcoPsL2DT00HsXW7p07j2D0nPsPHVkBKr2tgrNubT-yr77XKeVaRvv6mli6HTahouNaCdMUjo4VZwDHkZebPhDNMpEs0MSkH6dNei-qOgNX_NPf1S2BxPI3d_JD7xLV-0it7PSRy_cOsVw; userInfo=${encode(
+  '{"UserName":"2214031","BrandOwnerId":1236640,"BrandOwnerName":"杭州银棠科技有限公司","GcpCode":["697701862"],"UserCardNo":"2214031","IsPaid":false,"CompanyNameEN":"","CompanyAddressCN":"浙江省杭州市西湖区振华路189号紫润大厦九层914室","Contact":"黄芳","ContactTelNo":"13336080387","GcpLicenseHolderType":"H6335","LegalRepresentative":"黄芳","UnifiedSocialCreditCode":"91330106779253406G"}'
 )}`;
 
-const baseCode = "697700333";
-const brandName = "亿伦";
+const baseCode = "697703342";
+const brandName = "锐诚线缆 RUICHENG CABLE";
+const gpc = "10005541";
 function encode(text) {
   const pattern = new RegExp("[\u4E00-\u9FA5]+");
 
@@ -111,7 +118,7 @@ async function create(sku, code) {
         },
         body: `hiddenfirmcode=697640951&hiddengtin=&Act=new&itemid=&baseid=&is_private=0&thead=0&txt_gtin=${code}&Att_Sys_zh-cn_141_G=${encode(
           sku.skuName
-        )}&gpc=&Att_Sys_zh-cn_304_G=+${encode(
+        )}&gpc=${gpc}&Att_Sys_zh-cn_304_G=+${encode(
           brandName
         )}&Att_Sys_zh-cn_11_G=${encode(
           sku.skuName.slice(2, 6) || ""
@@ -129,6 +136,13 @@ async function create(sku, code) {
   }
 }
 
+function genData(current) {
+  const result = current.map(function (curr, index) {
+    return [index + 1, curr.itemId, curr.id, curr.skuName, curr.code];
+  });
+  return result;
+}
+
 async function run() {
   go(0);
 }
@@ -140,6 +154,16 @@ async function go(index) {
       "🚀 ~ file: batchProductionNo.ts:130 ~ go ~ errorSkus:",
       errorSkus
     );
+    const excelData = genData(json);
+    excelData.unshift(title);
+    const excelObj: any = { name: "sheet1", data: excelData };
+    console.log(
+      "🚀 ~ file: batchProductionNo.ts:159 ~ go ~ excelData:",
+      excelData
+    );
+    const buffer = xlsx.build([excelObj]);
+    let excelSavePath = path.join(__dirname, "../../data/code.xlsx");
+    fs.writeFileSync(excelSavePath, buffer);
     return;
   }
   // if (index > 1) return;
@@ -152,6 +176,7 @@ async function go(index) {
   const current = json[index];
 
   const code = await getCode();
+  current.code = code;
   await create(current, code);
   setTimeout(() => {
     go(index + 1);

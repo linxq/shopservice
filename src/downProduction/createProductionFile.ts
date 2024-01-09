@@ -5,9 +5,6 @@ const spus = require("../../spus.json");
 
 const basePath = `${__dirname}\\..\\..\\data\\production\\`;
 
-
-
-
 function createSpuDir(spu) {
   const path = `${basePath}\\${spu.id}`;
   if (!existsSync(path)) {
@@ -53,10 +50,12 @@ async function run() {
   clearDir(basePath);
   const filter = downFilter();
   console.log("🚀 ~ file: createProductionFile.ts:51 ~ run ~ filter:", filter);
+  let index = 0;
   for (const currSpu of spus) {
     if (filter && !filter[currSpu.id]) {
       continue;
     }
+
     const spuDirPath = createSpuDir(currSpu);
     const skus = currSpu.skus;
 
@@ -85,6 +84,7 @@ async function run() {
         }
       }
     }
+    index++;
   }
 }
 run();

@@ -12,9 +12,9 @@
     "getDataFree": "yarn ts-node src/downProduction/getDataFree.ts",
     "batchProductionNo": "yarn ts-node src/downProduction/batchProductionNo.ts",
     "createProject": "yarn ts-node src/downProduction/createProductionFile.ts",
-    "genExcel":"yarn ts-node src/downProduction/genExcel.ts",
-    "genPro": "npm run createProject && npm run genExcel"
-
+    "genExcel": "yarn ts-node src/downProduction/genExcel.ts",
+    "genPro": "npm run createProject && npm run genExcel",
+    "shopData":"yarn ts-node src/shopData/index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -40,7 +40,8 @@
     "node-fetch": "^3.3.2",
     "node-xlsx": "^0.23.0",
     "p-limit": "^5.0.0",
-    "pkg-dir": "^8.0.0"
+    "pkg-dir": "^8.0.0",
+    "typeorm": "^0.3.17"
   },
   "files": [
     "dist",

@@ -1,5 +1,5 @@
 // @ts-ignore
-const gm = require("gm").subClass({ imageMagick: true });
+const gm = require("gm").subClass({ imageMagick: "7+" });
 const glob = require("glob");
 const path = require("path");
 const fs = require("fs");
@@ -14,7 +14,7 @@ function run(index, length, imagesArray) {
   if (index === length) return;
   const imgPath = `${imagesArray[index]}`;
   const toPath = `${imgPath.replace("imgfrom", "imgTo")}`;
-
+  mkdirPath(imgPath);
   gm(imgPath)
     .resize(800, 800)
     .noProfile()
@@ -30,9 +30,14 @@ function run(index, length, imagesArray) {
           top = (800 - res.size.height) / 2;
         }
 
-        mkdirPath(toPath);
+        let sizeObj: any = {};
+        gm("./out.jpg").size(function (err, size) {
+          sizeObj = size;
+        });
+        console.log(toPath);
         gm()
           .command("composite")
+          .in("-compose", "overlay")
           .in("-gravity", "center")
           .in("./out.jpg")
           .in("./bg.jpg")
@@ -86,11 +91,16 @@ export function clearDir(path) {
 }
 
 function mkdirPath(pathStr) {
-  let basePath = "/";
-  let tempDirArray = pathStr.split("/");
+  let basePath = "";
+  let tempDirArray = pathStr.split("\\");
+  console.log(
+    "🚀 ~ file: combin.ts:91 ~ mkdirPath ~ tempDirArray:",
+    tempDirArray
+  );
 
   for (let i = 0; i < tempDirArray.length - 1; i++) {
-    basePath = basePath + "/" + tempDirArray[i];
+    basePath = i === 0 ? tempDirArray[i] : basePath + "/" + tempDirArray[i];
+    console.log("🚀 ~ file: combin.ts:96 ~ mkdirPath ~ basePath:", basePath);
 
     if (!fs.existsSync(basePath)) {
       fs.mkdirSync(basePath);
